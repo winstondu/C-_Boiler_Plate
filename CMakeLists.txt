@@ -3,19 +3,19 @@ cmake_minimum_required(VERSION 3.2)
 # Set initial variables
 #-------------------
 # Use Clang compiler here
-#SET (CMAKE_C_COMPILER "clang")
-#SET (CMAKE_C_FLAGS "-target x86_64-pc-w64-mingw32")
-#SET (CMAKE_CXX_COMPILER "clang++")
-#SET (CMAKE_CXX_FLAGS "-target x86_64-pc-w64-mingw32")
+SET (CMAKE_C_COMPILER "clang")
+SET (CMAKE_CXX_COMPILER "clang++")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Xlinker --allow-multiple-definition" )
 
-SET (CMAKE_C_COMPILER "gcc")
-SET (CMAKE_CXX_COMPILER "g++")
+# SET (CMAKE_C_COMPILER "gcc")
+# SET (CMAKE_CXX_COMPILER "g++")
 
 # Name of project
 set(PROJECT_NAME_STR SampleProject)
 project(${PROJECT_NAME_STR})
 # Set compiler flags (gnu++ over c++)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall -Werror -Wextra -pedantic -pedantic-errors")
+## add -DCMAKE_BUILD_TYPE=Release
 set (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} -lshlwapi)
 
 #-------------------
@@ -105,6 +105,7 @@ ExternalProject_Add(googlebenchmark
         CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${GBENCHMARK_DIRECTORY}
 	-DBENCHMARK_ENABLE_GTEST_TESTS=OFF
+	-DCMAKE_BUILD_TYPE=Release
         )
 ### Include the GoogleBM headers and libraries
 include_directories(${GBENCHMARK_DIRECTORY}/include)
