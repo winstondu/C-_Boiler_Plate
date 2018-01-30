@@ -16,6 +16,7 @@ project(${PROJECT_NAME_STR})
 # Set compiler flags (gnu++ over c++)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall -Werror -Wextra -pedantic -pedantic-errors")
 ## add -DCMAKE_BUILD_TYPE=Release
+# remove shlwapi if you're not on windows.
 set (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} -lshlwapi)
 
 #-------------------
@@ -31,14 +32,15 @@ include_directories(./include)
 # Set directory for external projects/libraries
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/lib)
 
-include(CTest REQUIRED) ## for ctests with benchmarks ???
-
 # Enable ExternalProject CMake module
 include(ExternalProject)
 
     #-------------------
     # Googletest
     #-------------------
+include(CTest REQUIRED) ## for ctests with benchmarks ???
+# Set directory
+set(GTEST_DIRECTORY ${EXT_PROJECTS_DIR}/googletest)
 
 # We need thread support
 find_package(Threads REQUIRED)
@@ -153,5 +155,6 @@ file(GLOB BM_SRC_FILES ${PROJECT_SOURCE_DIR}/tests/benchmarks/*.cpp)
 # Create test executable.
 add_executable(${PROJECT_BM_NAME} ${BM_SRC_FILES})
 add_dependencies(${PROJECT_BM_NAME} googlebenchmark)
-target_link_libraries(${PROJECT_BM_NAME} libgtest libgtestmain benchmark shlwapi.lib ${CMAKE_THREAD_LIBS_INIT})
+# (remove shlwapi.lib if you're not on windows)
+target_link_libraries(${PROJECT_BM_NAME} benchmark shlwapi.lib ${CMAKE_THREAD_LIBS_INIT})
 add_test(main_bm ${PROJECT_BM_NAME})
